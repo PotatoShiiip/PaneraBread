@@ -8,25 +8,38 @@ var pmx, pmy;
 var screenWidth = 500, screenHeight = 500;
 var screenX, screenY;
 
+var tempw, temph;
+var tempw2, temph2;
+var mouseDownX, mouseDownY;
+var selectionX, selectionY;
+var selectionW, selectionH;
+
+function selectionDimensions(){
+	selectionW = selectionX + tempw2;
+	selectionH = selectionY + temph2;
+}
+
+//Royal
 function getMouseCoordinates(event){
 	mouseX = event.clientX;
 	mouseY = event.clientY;
 
 	//Incredible find here. 
 	if((mouseX-pmx) > 0){
-		screenX += 1;
+		//screenX += 1;
 	}else if((mouseX-pmx) < 0){
-		screenX -= 1;
+		//screenX -= 1;
 	}
 	pmx = mouseX;
 
 	if((mouseY-pmy) > 0){
-		screenY += 1;
+		//screenY += 1;
 	}else if((mouseY-pmy) < 0){
-		screenY -= 1;
+		//screenY -= 1;
 	}
 	pmy = mouseY;
 
+/*
 	if(mouseX < 10){
 		screenX = 0;
 	}
@@ -39,13 +52,14 @@ function getMouseCoordinates(event){
 	if(mouseY > screenHeight || screenY > screenHeight){
 		screenY = 500;
 	}
+*/
 
-	document.getElementById("p1").innerHTML = "MouseX: " + mouseX + " | MouseY: " + mouseY;
-	document.getElementById("p2").innerHTML = "ScreenX: " + screenX + " | ScreenY: " + screenY;
-	document.getElementById("p3").innerHTML = (screenWidth-mouseX) + " | " + (mouseX-screenWidth);
+	//document.getElementById("p1").innerHTML = "MouseX: " + mouseX + " | MouseY: " + mouseY;
+	//document.getElementById("p2").innerHTML = "ScreenX: " + screenX + " | ScreenY: " + screenY;
+	//document.getElementById("p3").innerHTML = (screenWidth-mouseX) + " | " + (mouseX-screenWidth);
 }
 
-
+//Royal
 var mx, my;
 
 const ssquareArray = [];
@@ -59,57 +73,268 @@ function getMCoordinates(event){
 	document.getElementById("p1").innerHTML = "MouseX: " + mx + " | MouseY: " + my;
 }
 
-//draws a single square 
-function drawSingleSquare(){
+//New
+function drawSelectionR(){
+	document.getElementById("p5").innerHTML = "true";
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
 
-	ssquareArray.push([mx, my, 10, 10, mx + 10, my + 10, colorA[0]]);
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+
+	ctx.fillStyle = "red";
+	ctx.font = '15px san-serif';
+	ctx.fillText("X: " + mouseDownX + "|Y: " + mouseDownY, mouseDownX, mouseDownY);
+
+	ctx.strokeStyle = "purple";
+	ctx.beginPath();
+	ctx.rect(mouseDownX,mouseDownY,tempw,temph);
+	ctx.stroke();
+
+	ctx.beginPath();
+	//ssquareArray[0][6] = cArray[0];
+	ctx.strokeStyle = ssquareArray[0][6];
+	ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+	ctx.stroke();
+
+	if(tempw > 0 && temph > 0){
+		selectionA[0][0] = mouseDownX;
+		selectionA[0][1] = mouseDownY;
+		selectionA[1][0] = mouseDownX + tempw;
+		selectionA[1][1] = mouseDownY;
+		selectionA[2][0] = mouseDownX;
+		selectionA[2][1] = mouseDownY + temph;
+		selectionA[3][0] = mouseDownX + tempw;
+		selectionA[3][1] = mouseDownY + temph;
+		test = 1;
+	}
+	if(tempw > 0 && temph < 0){
+		selectionA[0][0] = mouseDownX;
+		selectionA[0][1] = mouseDownY + temph;
+		selectionA[1][0] = mouseDownX + tempw;
+		selectionA[1][1] = mouseDownY + temph;
+		selectionA[2][0] = mouseDownX;
+		selectionA[2][1] = mouseDownY;
+		selectionA[3][0] = mouseDownX + tempw;
+		selectionA[3][1] = mouseDownY;
+		test = 2;
+	}
+	if(tempw < 0 && temph > 0){
+		selectionA[0][0] = mouseDownX + tempw;
+		selectionA[0][1] = mouseDownY;
+		selectionA[1][0] = mouseDownX;
+		selectionA[1][1] = mouseDownY;
+		selectionA[2][0] = mouseDownX + tempw;
+		selectionA[2][1] = mouseDownY + temph;
+		selectionA[3][0] = mouseDownX;
+		selectionA[3][1] = mouseDownY + temph;
+		test = 3;
+	}
+	if(tempw < 0 && temph < 0){
+		selectionA[0][0] = mouseDownX + tempw;
+		selectionA[0][1] = mouseDownY + temph;
+		selectionA[1][0] = mouseDownX;
+		selectionA[1][1] = mouseDownY + temph;
+		selectionA[2][0] = mouseDownX + tempw;
+		selectionA[2][1] = mouseDownY;
+		selectionA[3][0] = mouseDownX;
+		selectionA[3][1] = mouseDownY;
+		test = 4;
+	}
+	if(tempw > 0){
+		ctx.fillText("Width: " + tempw, mouseDownX + (tempw/2), mouseDownY + (temph/2));
+	}
+	if(tempw < 0){
+		ctx.fillText("Width: " + tempw, (mouseDownX + tempw)-(tempw/2), (mouseDownY + temph)-(temph/2));
+
+	}
+	if(temph > 0){
+		ctx.fillText("Height: " + temph, mouseDownX + (tempw/2), mouseDownY + (temph/2)+10);
+	}
+	if(temph < 0){
+		ctx.fillText("Height: " + temph, (mouseDownX + tempw)-(tempw/2), (mouseDownY + temph)-(temph/2)+10);
+	}
+}
+
+
+function squareSize(){
+	tempw = mouseX - mouseDownX;
+	temph = mouseY - mouseDownY;
+
+	if(tempw < 0){
+		tempw2 = tempw * -1;
+		selectionX = mouseX;
+	}else{
+		tempw2 = tempw;
+		selectionX = mouseDownX;
+	}
+
+	if(temph < 0){
+		temph2 =  temph * -1;
+		selectionY = mouseY;
+	}else{
+		temph2 = temph;
+		selectionY = mouseDownY;
+	}
+
+	selectionDimensions();
+}
+
+setInterval(squareSize, 100);
+
+//royal
+//draws a single square 
+var eKey;
+var hbarbool = -1;
+function drawSingleSquare(event){
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
+	eKey = event.key;
+
+	if(eKey == 's' || eKey == 'S'){
+		ssquareArray.push([mx, my, 10, 10, mx + 10, my + 10, colorA[0]]);
+
+		ctx.beginPath();
+		ctx.strokeStyle = ssquareArray[0][6];
+		ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+		ctx.stroke();
+	}
+
+	if(eKey == 'z' || eKey == 'Z'){
+		hbarbool *= -1;
+
+		drawHotBar(ctx, canvas);
+
+	}
+	
+	/*
+	for(let i = 0; i < ssquareArray.length;i++){
+		ctx.beginPath();
+		ctx.strokeStyle = ssquareArray[i][6];
+		ctx.rect(ssquareArray[i][0],ssquareArray[i][1],ssquareArray[i][2]*-1,ssquareArray[i][3]*-1);
+		ctx.stroke();
+	}
+	*/
+}
+
+function drawHotBar(ctx, canvas){
+	if(hbarbool == 1){
+		ctx.clearRect(0, canvas.height-11, 21, 10);
+		ctx.beginPath();
+		ctx.strokeStyle = colorA[0];
+		ctx.rect(0, canvas.height - 100, 20, 100);
+		ctx.stroke();
+	}
+
+	if(hbarbool == -1){
+		ctx.clearRect(0, canvas.height-101, 21, 100);
+		ctx.beginPath();
+		ctx.strokeStyle = colorA[0];
+		ctx.rect(0, canvas.height - 10, 20, 10);
+		ctx.stroke();
+	}
+}
+
+var mitvl;
+var endx, endy;
+var sDSelectionI;
+var endX, endY;
+
+//this is the key, any object on the screen, if the mouse is on top of it, you can call any function.....
+function startminterval(){
+	mouseDownX = mouseX;
+	mouseDownY = mouseY;
+
+	if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
+		document.getElementById("p3").innerHTML = true;
+		mitvl = setInterval(moveSingleSquare, 24);
+	}else{
+		sDSelectionI = setInterval(drawSelectionR, 100);
+		document.getElementById("p3").innerHTML = woof;
+	}
+}
+
+
+function endminterval(){
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+
+	clearInterval(mitvl);
+	clearInterval(sDSelectionI);
 
 	ctx.beginPath();
 	ctx.strokeStyle = ssquareArray[0][6];
 	ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
 	ctx.stroke();
-
 }
 
-var mitvl;
-var endx, endy;
-
-function startminterval(){
-	mitvl = setInterval(moveSingleSquare, 24);
-}
-
-function endminterval(){
-	clearInterval(mitvl);
-}
-
+var tmx, tmy;
 var testbool = 0;
 //updates the x and y of the square with mouse coordinates and updates the "hit box"
 function updateSingleSquareCoordinates(){
 	ssquareArray[0][0] = mx;
 	ssquareArray[0][1] = my;
 
+	tmx = mx;
+	tmy = my;
+
 	ssquareArray[0][4] = mx + 10;
 	ssquareArray[0][5] = my + 10;
 
+	ssquareArray[0][6] = colorA[1];
+
+/*
 	if(mx > ssquareArray[0][0] && mx < ssquareArray[0][4] && my > ssquareArray[0][1] && my < ssquareArray[0][5]){
 		document.getElementById("p3").innerHTML = true;
-		testbool = 1;
+		
 	}else{
 		document.getElementById("p3").innerHTML = false;
 		testbool = 0;
 	}
+*/
 
+	/*
+	for(let i = 0; i < ssquareArray.length; i++){
+		if(mx > ssquareArray[i][0] && mx < ssquareArray[i][4] && my > ssquareArray[i][1] && my < ssquareArray[i][5]){
+			//document.getElementById("p3").innerHTML = true;
+			ssquareArray[i][0] = mx;
+			ssquareArray[i][1] = my;
+
+			ssquareArray[i][4] = mx + 10;
+			ssquareArray[i][5] = my + 10;
+
+			testbool = 1;
+		}else{
+			document.getElementById("p3").innerHTML = false;
+			testbool = 0;
+		}
+	}
+	*/
 	//document.getElementById("p2").innerHTML = ssquareArray[0][0] + " " + ssquareArray[0][1] + " " + ssquareArray[0][4] + " " + ssquareArray[0][5];
 }
 
-setInterval(checkMousePosition,100);
+//setInterval(checkMousePosition,100);
 function checkMousePosition(){
+	/*
+	for(let i = 0; i < ssquareArray.length < i++){
+		if(mx > ssquareArray[i][0] && mx < ssquareArray[i][4] && my > ssquareArray[i][1] && my < ssquareArray[i][5]){
+			document.getElementById("p3").innerHTML = true;
+		}else{
+			document.getElementById("p3").innerHTML = false;
+		}
+	}
+	*/
+
 	if(mx > ssquareArray[0][0] && mx < ssquareArray[0][4] && my > ssquareArray[0][1] && my < ssquareArray[0][5]){
 		document.getElementById("p3").innerHTML = true;
+		//moveSingleSquare();
+		ssquareArray[0][6] = colorA[1];
 	}else{
 		document.getElementById("p3").innerHTML = false;
+		ssquareArray[0][6] = colorA[0];
+		//moveSingleSquare();
 	}
 }
 
@@ -122,22 +347,66 @@ function moveSingleSquare(){
 
 	updateSingleSquareCoordinates();
 
-	ctx.beginPath();
-	if(testbool == 1){
-		ctx.strokeStyle = colorA[0][1];
+/*
+	if(mx > ssquareArray[0][0] && mx < ssquareArray[0][4] && my > ssquareArray[0][1] && my < ssquareArray[0][5]){
+		document.getElementById("p3").innerHTML = true;
+		
 	}else{
-		ctx.strokeStyle = colorA[0][0];
+		document.getElementById("p3").innerHTML = false;
+		testbool = 0;
 	}
+*/
+
+	if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
+		document.getElementById("p3").innerHTML = true;
+		
+	}else{
+		document.getElementById("p3").innerHTML = false;
+		testbool = 0;
+	}
+
+
+	/*
+	for(let i = 0; i < ssquareArray.length; i++){
+		ctx.beginPath();
+		ctx.font = '10px arial';
+		ctx.fillText(ssquareArray[i][0], ssquareArray[i][0], ssquareArray[i][1]);
+		ctx.rect(ssquareArray[i][0],ssquareArray[i][1],ssquareArray[i][2]*-1,ssquareArray[i][3]*-1);
+		ctx.stroke();
+	}
+	*/
+
+	ctx.beginPath();
+	ctx.strokeStyle = ssquareArray[0][6];
 	ctx.font = '10px arial';
 	ctx.fillText(ssquareArray[0][0], ssquareArray[0][0], ssquareArray[0][1]);
 	ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+	ctx.stroke();
+	//drawHotbar(ctx, canvas);
+}
+
+function texttest(){
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	
+	let squareW = 20;
+	let squareY = 30;
+	
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+
+	ctx.beginPath();
+	ctx.rect(mx, my, squareW, squareY);
+	ctx.font = '10px arial';
+	ctx.fillText("copy", mx, my+10);
+	ctx.fillText("copy1", mx, my+20);
+	ctx.fillText("copy2", mx, my+30);
 	ctx.stroke();
 }
 
 </script>
 </head>
-<body onkeydown="drawSingleSquare();">
-<canvas id="canvas" width="500" height="500" onmousemove="getMCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startminterval()" ontouchend="drawSingleSquare()"></canvas>
+<body onkeydown="drawSingleSquare(event);">
+<canvas id="canvas" width="500" height="500" style="border: 3px solid purple" oncontextmenu="texttest()" onmousemove="getMCoordinates(event), getMouseCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startminterval()" ontouchend="drawSingleSquare()"></canvas>
 
 <p id="p1"></p>
 <p id="p2"></p>
