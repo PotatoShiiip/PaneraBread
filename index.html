@@ -70,8 +70,10 @@ function getMCoordinates(event){
 	mx = event.clientX;
 	my = event.clientY;
 
-	document.getElementById("p1").innerHTML = "MouseX: " + mx + " | MouseY: " + my;
+	//document.getElementById("p1").innerHTML = "MouseX: " + mx + " | MouseY: " + my;
 }
+
+
 
 //New
 function drawSelectionR(){
@@ -80,6 +82,8 @@ function drawSelectionR(){
 	var ctx = canvas.getContext("2d");
 
 	ctx.clearRect(0,0,canvas.width, canvas.height);
+
+	ssquareArray[0][6] = colorA[0];
 
 	ctx.fillStyle = "red";
 	ctx.font = '15px san-serif';
@@ -91,7 +95,6 @@ function drawSelectionR(){
 	ctx.stroke();
 
 	ctx.beginPath();
-	//ssquareArray[0][6] = cArray[0];
 	ctx.strokeStyle = ssquareArray[0][6];
 	ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
 	ctx.stroke();
@@ -145,7 +148,6 @@ function drawSelectionR(){
 	}
 	if(tempw < 0){
 		ctx.fillText("Width: " + tempw, (mouseDownX + tempw)-(tempw/2), (mouseDownY + temph)-(temph/2));
-
 	}
 	if(temph > 0){
 		ctx.fillText("Height: " + temph, mouseDownX + (tempw/2), mouseDownY + (temph/2)+10);
@@ -153,6 +155,16 @@ function drawSelectionR(){
 	if(temph < 0){
 		ctx.fillText("Height: " + temph, (mouseDownX + tempw)-(tempw/2), (mouseDownY + temph)-(temph/2)+10);
 	}
+
+/*
+	if(ssquareArray[0][0]  selectionA[3][0] && ssquareArray[0][4] < selectionA[2][0] && ssquareArray[0][1] > selectionA[3][1] && ssquareArray[0][5] < selectionA[1][1]){
+		//ssquareArray[0][6] = colorA[1];
+		document.getElementById("p1").innerHTML = "true";		
+	}else{
+		//ssquareArray[0][6] = colorA[0];
+		document.getElementById("p1").innerHTML = "false";
+	}
+*/
 }
 
 
@@ -242,8 +254,11 @@ var endX, endY;
 
 //this is the key, any object on the screen, if the mouse is on top of it, you can call any function.....
 function startminterval(){
+	
 	mouseDownX = mouseX;
 	mouseDownY = mouseY;
+
+	//sDSelectionI = setInterval(drawSelectionR, 100);
 
 	if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
 		document.getElementById("p3").innerHTML = true;
@@ -252,6 +267,25 @@ function startminterval(){
 		sDSelectionI = setInterval(drawSelectionR, 100);
 		document.getElementById("p3").innerHTML = woof;
 	}
+}
+
+function startmintervalT(event){
+	
+	mouseDownX = event.clientX;
+	mouseDownY = event.clientY;
+
+	//sDSelectionI = setInterval(drawSelectionR, 100);
+
+	if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
+		document.getElementById("p3").innerHTML = true;
+		mitvl = setInterval(moveSingleSquare, 24);
+	}else{
+		sDSelectionI = setInterval(drawSelectionR, 100);
+		document.getElementById("p3").innerHTML = woof;
+	}
+
+
+
 }
 
 
@@ -283,7 +317,7 @@ function updateSingleSquareCoordinates(){
 	ssquareArray[0][4] = mx + 10;
 	ssquareArray[0][5] = my + 10;
 
-	ssquareArray[0][6] = colorA[1];
+	//ssquareArray[0][6] = colorA[1];
 
 /*
 	if(mx > ssquareArray[0][0] && mx < ssquareArray[0][4] && my > ssquareArray[0][1] && my < ssquareArray[0][5]){
@@ -375,7 +409,7 @@ function moveSingleSquare(){
 		ctx.stroke();
 	}
 	*/
-
+	ssquareArray[0][6] = colorA[1];
 	ctx.beginPath();
 	ctx.strokeStyle = ssquareArray[0][6];
 	ctx.font = '10px arial';
@@ -406,7 +440,7 @@ function texttest(){
 </script>
 </head>
 <body onkeydown="drawSingleSquare(event);">
-<canvas id="canvas" width="500" height="500" style="border: 3px solid purple" oncontextmenu="texttest()" onmousemove="getMCoordinates(event), getMouseCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startminterval()" ontouchend="drawSingleSquare()"></canvas>
+<canvas id="canvas" width="500" height="500" style="border: 3px solid purple" oncontextmenu="texttest()" onmousemove="getMCoordinates(event), getMouseCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startmintervalT(event)" ontouchend="drawSingleSquare()"></canvas>
 
 <p id="p1"></p>
 <p id="p2"></p>
