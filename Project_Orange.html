@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+
+<head>
+
+<script>
+
+var width = 30;
+var height = 10;
+
+setInterval(draw,24);
+
+function draw(){
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+
+	ctx.beginPath();
+	ctx.rect(canvas.width/2, canvas.height, width, height*-1);
+	ctx.stroke();
+}
+
+function changeHeight(x){
+	if(x > 0){
+		height += 10;
+	}
+
+	if(x < 0){
+		height -= 10;
+	}
+}
+
+</script>
+
+
+</head>
+
+
+
+
+<body>
+
+<canvas id="canvas" width="300" height="300"></canvas> <br>
+<img src="C:\Users\rramire1\Desktop\triangle_1.png" width="30" height="30" ontouchstart="changeHeight(1)" onclick="changeHeight(1)"> <br>
+<img src="C:\Users\rramire1\Desktop\triangle_2.png" width="30" height="30" ontouchstart="changeHeight(-1)" onclick="changeHeight(-1)">
+
+</body>
+
+
+</html>
