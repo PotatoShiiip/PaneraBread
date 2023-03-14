@@ -1,10 +1,55 @@
 <!doctype html>
 <html>
+
 <head>
 <title>Project Oranges</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
+
 <script>
+
+var canvasON = 0;
+
+//First Button
+function turnToParagraph(){
+	document.getElementById("mainp").innerHTML = `<p id="mainp">Welcome to Project Oranges.</p><p>First Circle: Home</p><p>Second Circle: Time</p><p>Third Circle: Project Purple</p>`;
+	canvasON = 0;
+	document.getElementById("mainp2").innerHTML = "";
+}
+
+//Second Button
+function turnToCanvas(){
+	document.getElementById("mainp").innerHTML = `<canvas id="canvas1" width="400" height="400" style="border: 3px solid orange;background-color: orange"></canvas>`;
+	canvasON = 1;
+	setInterval(getTime, 1000);
+	document.getElementById("mainp2").innerHTML = "";
+}
+
+var d, hours, minutes, seconds;
+function getTime(){
+	var canvas = document.getElementById("canvas1");
+	var ctx = canvas.getContext("2d");
+
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+	
+	d = new Date();
+	hours = d.getHours();
+	minutes = d.getMinutes();
+	seconds = d.getSeconds();
+
+	ctx.beginPath();
+	ctx.font = "30px Arial";
+	ctx.fillStyle = 'white';
+	ctx.textAlign = "center";
+	ctx.fillText(hours + ":" + minutes + ":" + seconds, canvas.width/2, canvas.height/2);
+	ctx.stroke();
+}
+
+//Third Button
+function turnToPurple(){
+	document.getElementById("mainp").innerHTML = "";
+	document.getElementById("mainp2").innerHTML = `<canvas id="canvas" width="500" height="500" style="border: 3px solid purple" oncontextmenu="texttest()" onmousemove="getMCoordinates(event), getMouseCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startmintervalT(event)" ontouchend="drawSingleSquare()"></canvas>`;
+}
+
 var mouseX, mouseY;
 var pmx, pmy;
 var screenWidth = 500, screenHeight = 500;
@@ -15,6 +60,8 @@ var tempw2, temph2;
 var mouseDownX, mouseDownY;
 var selectionX, selectionY;
 var selectionW, selectionH;
+
+var colorChangeBool = 0;
 
 function selectionDimensions(){
 	selectionW = selectionX + tempw2;
@@ -69,23 +116,45 @@ const colorA = ["red","purple"];
 
 //gets the x and y coordinates of the mouse on the canvas
 function getMCoordinates(event){
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
 	mx = event.clientX;
 	my = event.clientY;
 
 	//document.getElementById("p1").innerHTML = "MouseX: " + mx + " | MouseY: " + my;
+
+	//if(moveBool == 1){
+		if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
+			ssquareArray[0][6] = colorA[1];
+			ctx.beginPath();
+			ctx.clearRect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+			ctx.strokeStyle = ssquareArray[0][6];
+			ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+			ctx.stroke();
+		}else{
+			ssquareArray[0][6] = colorA[0];
+			ctx.beginPath();
+			ctx.clearRect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+			ctx.strokeStyle = ssquareArray[0][6];
+			ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+			ctx.stroke();
+		}
+	//}
+
 }
-
-
 
 //New
 function drawSelectionR(){
-	document.getElementById("p5").innerHTML = "true";
+	//document.getElementById("p5").innerHTML = "true";
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
 
 	ctx.clearRect(0,0,canvas.width, canvas.height);
 
 	ssquareArray[0][6] = colorA[0];
+
+	//colorChangeBool = 1;
 
 	ctx.fillStyle = "red";
 	ctx.font = '15px san-serif';
@@ -145,6 +214,7 @@ function drawSelectionR(){
 		selectionA[3][1] = mouseDownY;
 		test = 4;
 	}
+
 	if(tempw > 0){
 		ctx.fillText("Width: " + tempw, mouseDownX + (tempw/2), mouseDownY + (temph/2));
 	}
@@ -157,18 +227,7 @@ function drawSelectionR(){
 	if(temph < 0){
 		ctx.fillText("Height: " + temph, (mouseDownX + tempw)-(tempw/2), (mouseDownY + temph)-(temph/2)+10);
 	}
-
-/*
-	if(ssquareArray[0][0]  selectionA[3][0] && ssquareArray[0][4] < selectionA[2][0] && ssquareArray[0][1] > selectionA[3][1] && ssquareArray[0][5] < selectionA[1][1]){
-		//ssquareArray[0][6] = colorA[1];
-		document.getElementById("p1").innerHTML = "true";		
-	}else{
-		//ssquareArray[0][6] = colorA[0];
-		document.getElementById("p1").innerHTML = "false";
-	}
-*/
 }
-
 
 function squareSize(){
 	tempw = mouseX - mouseDownX;
@@ -199,6 +258,7 @@ setInterval(squareSize, 100);
 //draws a single square 
 var eKey;
 var hbarbool = -1;
+
 function drawSingleSquare(event){
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
@@ -218,7 +278,6 @@ function drawSingleSquare(event){
 		hbarbool *= -1;
 
 		drawHotBar(ctx, canvas);
-
 	}
 	
 	/*
@@ -253,41 +312,41 @@ var mitvl;
 var endx, endy;
 var sDSelectionI;
 var endX, endY;
+var moveBool = 1;
 
 //this is the key, any object on the screen, if the mouse is on top of it, you can call any function.....
 function startminterval(){
-	
 	mouseDownX = mouseX;
 	mouseDownY = mouseY;
 
 	//sDSelectionI = setInterval(drawSelectionR, 100);
+	//clearInterval(cmp);
 
 	if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
-		document.getElementById("p3").innerHTML = true;
+		//moveBool = 0;
 		mitvl = setInterval(moveSingleSquare, 24);
 	}else{
+		//moveBool = 1;
 		sDSelectionI = setInterval(drawSelectionR, 100);
-		document.getElementById("p3").innerHTML = woof;
 	}
 }
 
+var cmp; 
 function startmintervalT(event){
 	
 	mouseDownX = event.clientX;
 	mouseDownY = event.clientY;
 
 	//sDSelectionI = setInterval(drawSelectionR, 100);
-
+	//clearInterval(cmp);
 	if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
-		document.getElementById("p3").innerHTML = true;
+		//document.getElementById("p3").innerHTML = true;
 		mitvl = setInterval(moveSingleSquare, 24);
+		
 	}else{
 		sDSelectionI = setInterval(drawSelectionR, 100);
-		document.getElementById("p3").innerHTML = woof;
+		//document.getElementById("p3").innerHTML = woof;
 	}
-
-
-
 }
 
 
@@ -299,8 +358,10 @@ function endminterval(){
 
 	clearInterval(mitvl);
 	clearInterval(sDSelectionI);
+	//cmp = setInterval(checkMousePosition,100);
 
 	ctx.beginPath();
+	ssquareArray[0][6] = colorA[0];
 	ctx.strokeStyle = ssquareArray[0][6];
 	ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
 	ctx.stroke();
@@ -348,11 +409,14 @@ function updateSingleSquareCoordinates(){
 		}
 	}
 	*/
-	//document.getElementById("p2").innerHTML = ssquareArray[0][0] + " " + ssquareArray[0][1] + " " + ssquareArray[0][4] + " " + ssquareArray[0][5];
+	document.getElementById("p2").innerHTML = ssquareArray[0][0] + " " + ssquareArray[0][1] + " " + ssquareArray[0][4] + " " + ssquareArray[0][5];
 }
 
-//setInterval(checkMousePosition,100);
+
 function checkMousePosition(){
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
 	/*
 	for(let i = 0; i < ssquareArray.length < i++){
 		if(mx > ssquareArray[i][0] && mx < ssquareArray[i][4] && my > ssquareArray[i][1] && my < ssquareArray[i][5]){
@@ -367,12 +431,31 @@ function checkMousePosition(){
 		document.getElementById("p3").innerHTML = true;
 		//moveSingleSquare();
 		ssquareArray[0][6] = colorA[1];
+		ctx.beginPath();
+		ctx.clearRect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+		ctx.strokeStyle = ssquareArray[0][6];
+		ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+		ctx.stroke();
 	}else{
 		document.getElementById("p3").innerHTML = false;
 		ssquareArray[0][6] = colorA[0];
+		ctx.beginPath();
+		ctx.clearRect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+		ctx.strokeStyle = ssquareArray[0][6];
+		ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+		ctx.stroke();
 		//moveSingleSquare();
 	}
+
+/*
+	ctx.beginPath();
+	ctx.clearRect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+	ctx.strokeStyle = ssquareArray[0][6];
+	ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
+	ctx.stroke();
+*/
 }
+
 
 //draws square after mouse mooves
 function moveSingleSquare(){
@@ -394,10 +477,10 @@ function moveSingleSquare(){
 */
 
 	if(ssquareArray[0][0] < mx && ssquareArray[0][4] > mx && ssquareArray[0][1] < my && ssquareArray[0][5] > my){
-		document.getElementById("p3").innerHTML = true;
+		//document.getElementById("p3").innerHTML = true;
 		
 	}else{
-		document.getElementById("p3").innerHTML = false;
+		//document.getElementById("p3").innerHTML = false;
 		testbool = 0;
 	}
 
@@ -411,6 +494,7 @@ function moveSingleSquare(){
 		ctx.stroke();
 	}
 	*/
+
 	ssquareArray[0][6] = colorA[1];
 	ctx.beginPath();
 	ctx.strokeStyle = ssquareArray[0][6];
@@ -418,7 +502,6 @@ function moveSingleSquare(){
 	ctx.fillText(ssquareArray[0][0], ssquareArray[0][0], ssquareArray[0][1]);
 	ctx.rect(ssquareArray[0][0],ssquareArray[0][1],ssquareArray[0][2]*-1,ssquareArray[0][3]*-1);
 	ctx.stroke();
-	//drawHotbar(ctx, canvas);
 }
 
 function texttest(){
@@ -440,16 +523,25 @@ function texttest(){
 }
 
 </script>
-</head>
-<body onkeydown="drawSingleSquare(event);"> 
-<a href="https://potatoshiiip.github.io/PaneraBread/Project_Orange.html">Touch Demo</a> <br>
-<canvas id="canvas" width="500" height="500" style="border: 3px solid purple" oncontextmenu="texttest()" onmousemove="getMCoordinates(event), getMouseCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startmintervalT(event)" ontouchend="drawSingleSquare()"></canvas>
 
-<p id="p1"></p>
-<p id="p2"></p>
-<p id="p3"></p>
-<p id="p4"></p>
-<p id="p5"></p>
+</head>
+<body onkeydown="drawSingleSquare(event);">
+<p id="mainp2"></p><br>
+<p id="mainp">Please Click/Touch One Of The Circle Buttons Above</p>
+<br>
+<img src="https://imagizer.imageshack.com/img923/2998/C3G8Lf.png" width="30" height="30">
+<img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30" onclick="turnToParagraph()" ontouchstart="turnToParagraph()">
+<img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30" onclick="turnToCanvas()" ontouchstart="turnToCanvas()">
+<img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30" onclick="turnToPurple()" ontouchstart="turnToPurple()">
+<img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30">
+<img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30">
+<img src="https://imagizer.imageshack.com/img924/3939/lJbgUx.png" width="30" height="30">
+
+<script async
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAddJkU5fd3FxPX6Ema0bt6n5CX_dEf5_s&callback=initMap">
+</script>
 
 </body>
+
+
 </html>
