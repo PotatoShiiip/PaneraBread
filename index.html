@@ -14,6 +14,7 @@ function turnToParagraph(){
 	document.getElementById("mainp").innerHTML = `<p id="mainp">Welcome to Project Oranges.</p><p>First Circle: Home</p><p>Second Circle: Time</p><p>Third Circle: Project Purple</p>`;
 	canvasON = 0;
 	document.getElementById("mainp2").innerHTML = "";
+	document.getElementById("mainp3").innerHTML = "";
 }
 
 //Second Button
@@ -22,6 +23,7 @@ function turnToCanvas(){
 	canvasON = 1;
 	setInterval(getTime, 1000);
 	document.getElementById("mainp2").innerHTML = "";
+	document.getElementById("mainp3").innerHTML = "";
 }
 
 var d, hours, minutes, seconds;
@@ -47,7 +49,8 @@ function getTime(){
 //Third Button
 function turnToPurple(){
 	document.getElementById("mainp").innerHTML = "";
-	document.getElementById("mainp2").innerHTML = `<canvas id="canvas" width="500" height="500" style="border: 3px solid purple" oncontextmenu="texttest()" onmousemove="getMCoordinates(event), getMouseCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startmintervalT(event)" ontouchend="drawSingleSquare()"></canvas>`;
+	document.getElementById("mainp2").innerHTML = `<canvas id="canvas" width="400" height="400" style="border: 3px solid purple" oncontextmenu="texttest()" onmousemove="getMCoordinates(event), getMouseCoordinates(event)" onmousedown="startminterval()" onmouseup="endminterval()" ontouchmove="startmintervalT(event)" ontouchend="drawSingleSquare()"></canvas>`;
+	document.getElementById("mainp3").innerHTML = "";
 }
 
 var mouseX, mouseY;
@@ -522,18 +525,57 @@ function texttest(){
 	ctx.stroke();
 }
 
+//Fourth Button
+function turnToBlue(){
+	document.getElementById("mainp").innerHTML = "";
+	document.getElementById("mainp2").innerHTML = "";
+
+	document.getElementById("mainp3").innerHTML = `<canvas id="canvas3" width="400" height="400" style="border: 3px solid blue" ontouchend="touchLocation(event)"></canvas>`;
+	createTouchSquares();
+}
+
+function createTouchSquares(){
+	var canvas = document.getElementById("canvas3");
+	var ctx = canvas.getContext("2d");
+
+	ctx.beginPath();
+	ctx.rect(0,0,200, 200);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.rect(200, 0, 200, 200);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.rect(0, 200, 200, 200);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.rect(200, 200, 200, 200);
+	ctx.stroke();
+}
+
+var touchx_b, touchy_b;
+function touchLocation(event){
+	touchx_b = event.clientX;
+	touchy_b = event.clientY;
+
+	document.getElementById("mainp").innerHTML = "X: " + touchx_b + " | Y: " + touchy_b;
+}
+
 </script>
 
 </head>
 <body onkeydown="drawSingleSquare(event);">
-<p id="mainp2"></p><br>
+<p id="mainp2"></p>
+<p id="mainp3"></p>
 <p id="mainp">Please Click/Touch One Of The Circle Buttons Above</p>
 <br>
 <img src="https://imagizer.imageshack.com/img923/2998/C3G8Lf.png" width="30" height="30">
 <img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30" onclick="turnToParagraph()" ontouchstart="turnToParagraph()">
 <img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30" onclick="turnToCanvas()" ontouchstart="turnToCanvas()">
 <img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30" onclick="turnToPurple()" ontouchstart="turnToPurple()">
-<img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30">
+<img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30" onclick="turnToBlue()" ontouchstart="turnToBlue()">
 <img src="https://imagizer.imageshack.com/img923/9312/QCiivn.png" width="30" height="30">
 <img src="https://imagizer.imageshack.com/img924/3939/lJbgUx.png" width="30" height="30">
 
