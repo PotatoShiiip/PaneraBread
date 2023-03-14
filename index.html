@@ -557,8 +557,8 @@ function createTouchSquares(){
 
 var touchx_b, touchy_b;
 function touchLocation(event){
-	touchx_b = event.clientX;
-	touchy_b = event.clientY;
+	touchx_b = event.touches[0].clientX;
+	touchy_b = event.touches[0].clientY;
 
 	document.getElementById("mainp").innerHTML = "X: " + touchx_b + " | Y: " + touchy_b;
 }
