@@ -530,7 +530,7 @@ function turnToBlue(){
 	document.getElementById("mainp").innerHTML = "";
 	document.getElementById("mainp2").innerHTML = "";
 
-	document.getElementById("mainp3").innerHTML = `<canvas id="canvas3" width="400" height="400" style="border: 3px solid blue" ontouchend="touchLocation(event)"></canvas>`;
+	document.getElementById("mainp3").innerHTML = `<canvas id="canvas3" width="300" height="300" style="border: 3px solid blue" ontouchend="touchLocation(event)"></canvas>`;
 	createTouchSquares();
 }
 
@@ -539,19 +539,19 @@ function createTouchSquares(){
 	var ctx = canvas.getContext("2d");
 
 	ctx.beginPath();
-	ctx.rect(0,0,200, 200);
+	ctx.rect(0,0,150, 150);
 	ctx.stroke();
 
 	ctx.beginPath();
-	ctx.rect(200, 0, 200, 200);
+	ctx.rect(150, 0, 150, 150);
 	ctx.stroke();
 
 	ctx.beginPath();
-	ctx.rect(0, 200, 200, 200);
+	ctx.rect(0, 150, 150, 150);
 	ctx.stroke();
 
 	ctx.beginPath();
-	ctx.rect(200, 200, 200, 200);
+	ctx.rect(150, 150, 150, 150);
 	ctx.stroke();
 }
 
