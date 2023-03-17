@@ -555,13 +555,7 @@ function createTouchSquares(){
 	ctx.stroke();
 }
 
-var touchx_b, touchy_b;
-function touchLocation(event){
-	touchx_b = event.touches[0].clientX;
-	touchy_b = event.touches[0].clientY;
-
-	document.getElementById("mainp").innerHTML = "X: " + touchx_b + " | Y: " + touchy_b;
-}
+//var touchx_b, touchy_b;
 
 </script>
 
@@ -581,6 +575,15 @@ function touchLocation(event){
 
 <script async
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAddJkU5fd3FxPX6Ema0bt6n5CX_dEf5_s&callback=initMap">
+</script>
+
+<script>
+function touchLocation(event){
+	var touchx_b = event.touches[0].clientX;
+	var touchy_b = event.touches[0].clientY;
+
+	document.getElementById("mainp").innerHTML = "X: " + touchx_b + " | Y: " + touchy_b;
+}
 </script>
 
 </body>
