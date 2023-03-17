@@ -530,7 +530,7 @@ function turnToBlue(){
 	document.getElementById("mainp").innerHTML = "";
 	document.getElementById("mainp2").innerHTML = "";
 
-	document.getElementById("mainp3").innerHTML = `<canvas id="canvas3" width="400" height="400" style="border: 3px solid blue" ontouchstart="touchLocation(event)"></canvas>`;
+	document.getElementById("mainp3").innerHTML = `<canvas id="canvas3" width="400" height="400" style="border: 3px solid blue" ontouchend="touchLocation(event)"></canvas>`;
 	createTouchSquares();
 }
 
